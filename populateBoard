@@ -1,0 +1,119 @@
+void populateBoard(bool getUserInput, int board[BOARDROWS+1][BOARDCOLS+1]){
+
+    int ship[5],shipnum,row,col,orientation,i,check;//declaring variables
+    for(i=0;i<5;++i){//creating an array of numbers from 5 to 1
+        ship[i]=5-i;
+    }
+    shipnum=0;
+    if(getUserInput==1){//user generated code
+        printf("Rows are 1 - 9, Columns are 1 - 11\nOrientation is 0 for across, 1 for down\n");//printing the instructions
+        do{
+            check=1;//variable that checks if the entered values are valid
+            printf("Give starting row, starting column and orientation (3 inputs) for ship of size=%d:",ship[shipnum]);//asking for input
+            scanf("%d %d %d",&row,&col,&orientation);//accepting the user values
+            if(row>0 && row<10 && col>0 && col<12 && (orientation==1 || orientation==0)){//checking the bare minimum conditions
+                if(shipnum>0){//checking if already populated 
+                    if(orientation==1){
+                        for(i=row;i<ship[shipnum]+row;++i){
+                            if(board[i][col]!=0){
+                                check=2;
+                            }
+                        }
+                    }
+                    else if(orientation==0){
+                        for(i=col;i<ship[shipnum]+col;++i){
+                            if(board[row][i]!=0){
+                                check=2;
+                            }
+                        }
+                    }
+                }
+                
+                if(orientation==1){//checking if it is going off the board(down scenerio)
+                    if(row+ship[shipnum]-1>9){
+                        check=0;
+                    }
+                }
+                if(orientation==0){//checking if it is going off the board(across scenerio)
+                    if(col+ship[shipnum]-1>11){
+                        check=0;
+                    }
+                }
+                
+                if(check==1){//if all conditions are satisfied, then using this to enter ships on the board
+                    if(orientation==1){
+                        for(i=row;i<ship[shipnum]+row;++i){
+                            board[i][col]=ship[shipnum];
+                        }
+                    }
+                    else if(orientation==0){
+                        for(i=col;i<ship[shipnum]+col;++i){
+                            board[row][i]=ship[shipnum];
+                        }
+                    }
+                    ++shipnum;//moving onto the next ship
+                }
+                else if(check==2){//output error because of overlap
+                    printf("Conflicts with ship already placed\n");
+                }
+                else{//output error because of going out of board
+                    printf("Invalid Input\n");
+                }
+            }
+            else{//output error for invalid inputs
+                printf("Invalid Input\n");
+            }
+        }while(shipnum<5);//using the do while loop to run this till we accet all 5 ships
+    }
+    else{//computer generated ship locations
+            do{
+            check=1;
+            row=getRand(1,9);//using the getRand() to generate values
+            col=getRand(1,11);
+            orientation=getRand(0,1);
+            
+            if(shipnum>0){//checking if already populated 
+                    if(orientation==1){
+                        for(i=row;i<ship[shipnum]+row;++i){
+                            if(board[i][col]!=0){
+                                check=2;
+                            }
+                        }
+                    }
+                    else if(orientation==0){
+                        for(i=col;i<ship[shipnum]+col;++i){
+                            if(board[row][i]!=0){
+                                check=2;
+                            }
+                        }
+                    }
+                }
+                
+                if(orientation==1){//checking if it is going off the board(down scenerio)
+                    if(row+ship[shipnum]-1>9){
+                        check=0;
+                    }
+                }
+                if(orientation==0){//checking if it is going off the board(across scenerio)
+                    if(col+ship[shipnum]-1>11){
+                        check=0;
+                    }
+                }
+                
+                if(check==1){//adding the ship to the board if all conditions are met
+                    if(orientation==1){
+                        for(i=row;i<ship[shipnum]+row;++i){
+                            board[i][col]=ship[shipnum];
+                        }
+                    }
+                    else if(orientation==0){
+                        for(i=col;i<ship[shipnum]+col;++i){
+                            board[row][i]=ship[shipnum];
+                        }
+                    }
+                    ++shipnum;
+                }
+            
+        }while(shipnum<5);//repeat till all 5 ships are entered by the computer
+    }
+}
